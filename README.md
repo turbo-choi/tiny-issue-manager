@@ -1,3 +1,5 @@
+# Codex & bkit 으로 만든 tiny issue manager
+
 # Simple Issue Management
 
 ## Overview
