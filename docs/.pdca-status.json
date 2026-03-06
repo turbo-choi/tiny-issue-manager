@@ -1,0 +1,130 @@
+{
+  "version": "2.0",
+  "lastUpdated": "2026-03-06T02:22:48.135Z",
+  "activeFeatures": [
+    "simple-issue-management"
+  ],
+  "primaryFeature": "simple-issue-management",
+  "features": {
+    "simple-issue-management": {
+      "phase": "completed",
+      "matchRate": null,
+      "iterationCount": 1,
+      "documents": {},
+      "taskChain": [
+        {
+          "phase": "plan",
+          "status": "completed",
+          "createdAt": "2026-03-06T02:08:58.061Z",
+          "completedAt": "2026-03-06T02:10:15.756Z"
+        },
+        {
+          "phase": "design",
+          "status": "completed",
+          "createdAt": "2026-03-06T02:08:58.061Z",
+          "completedAt": "2026-03-06T02:12:58.234Z"
+        },
+        {
+          "phase": "do",
+          "status": "completed",
+          "createdAt": "2026-03-06T02:08:58.061Z",
+          "completedAt": "2026-03-06T02:21:47.678Z"
+        },
+        {
+          "phase": "check",
+          "status": "completed",
+          "createdAt": "2026-03-06T02:08:58.061Z",
+          "completedAt": "2026-03-06T02:22:48.129Z"
+        },
+        {
+          "phase": "report",
+          "status": "completed",
+          "createdAt": "2026-03-06T02:08:58.061Z",
+          "completedAt": "2026-03-06T02:22:48.135Z"
+        }
+      ],
+      "timestamps": {
+        "started": "2026-03-06T02:08:58.062Z",
+        "lastUpdated": "2026-03-06T02:22:48.135Z"
+      },
+      "completedAt": "2026-03-06T02:22:48.133Z"
+    }
+  },
+  "pipeline": {
+    "currentPhase": 1,
+    "level": "Starter",
+    "phaseHistory": []
+  },
+  "session": {
+    "startedAt": "2026-03-06T02:08:58.059Z",
+    "onboardingCompleted": false,
+    "lastActivity": "2026-03-06T02:22:48.135Z"
+  },
+  "history": [
+    {
+      "feature": "simple-issue-management",
+      "from": "plan",
+      "to": "design",
+      "timestamp": "2026-03-06T02:10:15.753Z"
+    },
+    {
+      "feature": "simple-issue-management",
+      "action": "phase_complete",
+      "phase": "plan",
+      "nextPhase": "design",
+      "timestamp": "2026-03-06T02:10:15.754Z"
+    },
+    {
+      "feature": "simple-issue-management",
+      "from": "design",
+      "to": "design",
+      "timestamp": "2026-03-06T02:11:22.663Z"
+    },
+    {
+      "feature": "simple-issue-management",
+      "from": "design",
+      "to": "do",
+      "timestamp": "2026-03-06T02:12:58.231Z"
+    },
+    {
+      "feature": "simple-issue-management",
+      "action": "phase_complete",
+      "phase": "design",
+      "nextPhase": "do",
+      "timestamp": "2026-03-06T02:12:58.232Z"
+    },
+    {
+      "feature": "simple-issue-management",
+      "from": "do",
+      "to": "check",
+      "timestamp": "2026-03-06T02:21:47.671Z"
+    },
+    {
+      "feature": "simple-issue-management",
+      "action": "phase_complete",
+      "phase": "do",
+      "nextPhase": "check",
+      "timestamp": "2026-03-06T02:21:47.672Z"
+    },
+    {
+      "feature": "simple-issue-management",
+      "from": "check",
+      "to": "act",
+      "timestamp": "2026-03-06T02:22:48.127Z"
+    },
+    {
+      "feature": "simple-issue-management",
+      "action": "phase_complete",
+      "phase": "check",
+      "nextPhase": "act",
+      "timestamp": "2026-03-06T02:22:48.128Z"
+    },
+    {
+      "feature": "simple-issue-management",
+      "action": "phase_complete",
+      "phase": "report",
+      "nextPhase": "completed",
+      "timestamp": "2026-03-06T02:22:48.134Z"
+    }
+  ]
+}
