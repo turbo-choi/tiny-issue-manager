@@ -30,11 +30,12 @@ Deliver a lightweight issue management MVP that replaces complex Jira workflows 
 - Dashboard screen
 - Simple issue registration form or modal
 - Reusable issue detail modal opened from board and dashboard cards
-- Detail modal actions for status update, issue edit, and issue delete
+- Detail modal actions for status update, issue edit, and issue discard (soft delete)
 - Detail modal change history section for status and assignee updates
 - Detail modal history filter and pagination controls
 - Detail modal period filter controls (7 days and 30 days)
 - Detail modal custom date range filter controls (from/to)
+- Detail modal close behavior: close button and `Esc` only (no outside-click close)
 
 ## Steps
 
@@ -47,15 +48,17 @@ Deliver a lightweight issue management MVP that replaces complex Jira workflows 
 7. Enforce role-based permissions in the backend and UI
 8. Implement board and dashboard behavior against the new permissions
 9. Add reusable issue detail modal and connect ticket click actions
-10. Add issue update and delete API support for detail-modal follow-up actions
+10. Add issue update and discard API support for detail-modal follow-up actions
 11. Connect detail modal actions to board and dashboard state updates
 12. Add issue change-history persistence and read API for status and assignee changes
 13. Connect detail modal history section to the new API
 14. Add history query filter and pagination support to API and detail modal
 15. Add history period filter support to API and detail modal
 16. Add custom history date-range filter support to API and detail modal
-17. Verify success criteria against the MVP scope
-18. Document final commands and environment variables
+17. Replace physical issue delete with discarded-status transition
+18. Disable outside-click close behavior for issue detail popup
+19. Verify success criteria against the MVP scope
+20. Document final commands and environment variables
 
 ## Tests
 
@@ -65,12 +68,14 @@ Deliver a lightweight issue management MVP that replaces complex Jira workflows 
 - Verify personal issue view only shows the current user's created issues
 - Verify ticket detail view opens from board and dashboard and shows the selected issue context
 - Verify detail modal can update status and editable fields for permitted users
-- Verify detail modal can delete issues for permitted users and remove them from UI immediately
+- Verify detail modal can discard issues for permitted users without physical deletion
 - Verify detail modal history shows actor and timestamp for status and assignee changes
 - Verify detail modal history filter (`All`, `Status`, `Assignee`) works correctly
 - Verify detail modal history pagination loads next and previous pages correctly
 - Verify detail modal period filter (`All time`, `Last 7 days`, `Last 30 days`) works correctly
 - Verify detail modal custom `from/to` period filter works correctly with field filters and pagination
+- Verify issue discard keeps issue record in DB and changes status to discarded
+- Verify issue detail popup does not close on outside click and closes by `Close` or `Esc`
 - Verify responsive layout works on desktop and mobile widths
 
 ## Rollback
@@ -87,8 +92,10 @@ Deliver a lightweight issue management MVP that replaces complex Jira workflows 
 - 2026-03-06: Changed backend approach to internal Next.js APIs with persistent server storage
 - 2026-03-06: Planned SQLite migration plus user management and RBAC
 - 2026-03-06: Added reusable issue detail modal step for board and dashboard cards
-- 2026-03-06: Added detail modal follow-up action implementation for update and delete
+- 2026-03-06: Added detail modal follow-up action implementation for update and discard
 - 2026-03-06: Added change-history implementation step for status and assignee changes
 - 2026-03-06: Added change-history filter and pagination implementation step
 - 2026-03-06: Added change-history period filter implementation step
 - 2026-03-06: Added custom history date-range filter implementation step
+- 2026-03-06: Added soft-delete via discarded status implementation step
+- 2026-03-06: Added no-outside-click close behavior for detail popup

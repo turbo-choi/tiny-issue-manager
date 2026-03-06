@@ -11,11 +11,12 @@ This repository contains a lightweight issue management MVP built to replace ove
 - Fast issue registration targeted for under one minute
 - Board-based status tracking with drag-and-drop updates
 - In-context issue detail dialog from board and dashboard tickets
-- Detail-dialog follow-up actions for issue update and delete
+- Detail-dialog follow-up actions for issue update and discard (soft delete)
 - Detail-dialog change history for status and assignee updates
 - Detail-dialog history filter and pagination controls
 - Detail-dialog period filters for recent 7 and 30 days
 - Detail-dialog custom date range filters (`from` and `to`)
+- Detail-dialog outside click does not close; only `Close` or `Esc` closes it
 - Delayed issue dashboard on a single screen
 - Single-screen view of issues created by the current user
 - Login-required responsive web experience
@@ -82,8 +83,9 @@ Seeded login accounts:
 - 2026-03-06: Switched backend plan to built-in Next.js API with server persistence
 - 2026-03-06: Planned SQLite migration, user management, and role-based authorization
 - 2026-03-06: Added in-context issue detail dialog on board and dashboard cards
-- 2026-03-06: Added detail-dialog follow-up actions for status update, metadata edit, and issue delete
+- 2026-03-06: Added detail-dialog follow-up actions for status update, metadata edit, and issue discard
 - 2026-03-06: Added detail-dialog change history for status and assignee updates
 - 2026-03-06: Added detail-dialog history filter and pagination controls
 - 2026-03-06: Added detail-dialog period filters for 7-day and 30-day history windows
 - 2026-03-06: Added detail-dialog custom from/to date-range filters for history
+- 2026-03-06: Updated detail-dialog close behavior to ignore outside-click close

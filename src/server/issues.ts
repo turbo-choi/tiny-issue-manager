@@ -1,6 +1,6 @@
 import type { SessionUser } from "@/types/auth";
 import type { CreateIssueInput, IssueStatus, UpdateIssueInput } from "@/types/issue";
-import { createIssue, createIssueEvents, deleteIssue, findIssue, getUserById, listIssueEvents, listIssues, updateIssue } from "@/server/db";
+import { createIssue, createIssueEvents, findIssue, getUserById, listIssueEvents, listIssues, updateIssue } from "@/server/db";
 
 export function listIssuesForUser() {
   return listIssues();
@@ -164,7 +164,7 @@ export function deleteIssueForUser(user: SessionUser, id: string) {
     throw new Error("You do not have permission to delete this issue.");
   }
 
-  deleteIssue(id);
+  return updateIssueForUser(user, id, { status: "Discarded" });
 }
 
 export function listIssueHistoryForUser(

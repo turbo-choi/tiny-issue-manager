@@ -108,6 +108,7 @@ Sections:
   - `Todo`
   - `In Progress`
   - `Done`
+  - `Discarded`
 - reusable issue detail modal triggered from ticket title or detail action
 
 Behavior:
@@ -172,6 +173,7 @@ Behavior:
   - Todo: neutral
   - In Progress: active
   - Done: success
+  - Discarded: muted
   - Delayed badge: warning or danger
 
 ### 6.3 Responsive Breakpoints
@@ -212,7 +214,7 @@ Fields:
 - `updatedAt`
 
 Derived fields:
-- `isDelayed = dueDate < now && status !== "Done"`
+- `isDelayed = dueDate < now && status !== "Done" && status !== "Discarded"`
 
 The issue detail view reuses these fields directly and does not require an additional detail entity.
 
@@ -221,6 +223,7 @@ The issue detail view reuses these fields directly and does not require an addit
 - `Todo`
 - `In Progress`
 - `Done`
+- `Discarded`
 
 Status values are fixed in MVP and not user-configurable.
 
@@ -257,7 +260,7 @@ The MVP uses internal API routes under `/api`.
 - `PATCH /api/issues/:id`
   - update status or metadata
 - `DELETE /api/issues/:id`
-  - delete issue when caller has delete permission
+  - discard issue (soft delete) when caller has delete permission
 - `GET /api/issues/:id/history`
   - list status and assignee change history with actor and timestamp
   - supports query params: `field`, `days`, `from`, `to`, `page`, `pageSize`
@@ -333,10 +336,10 @@ The MVP uses internal API routes under `/api`.
 
 - detail overlay can update `title`, `description`, `assignee`, `due date`, and `status`
 - board and dashboard update local issue state immediately after successful detail save
-- delete action is available in detail view only when permission is granted
-- `lead` can delete any issue
-- `member` can delete only issues they created
-- `planner` cannot delete issues
+- discard action is available in detail view only when permission is granted
+- `lead` can discard any issue
+- `member` can discard only issues they created
+- `planner` cannot discard issues
 
 ### 10.4 Change History Rules
 
@@ -355,14 +358,14 @@ The MVP uses internal API routes under `/api`.
 - an issue is delayed when:
   - due date exists
   - due date is before current time
-  - status is not `Done`
+  - status is not `Done` and not `Discarded`
 
 ## 11. Error and Empty State Design
 
 - login failure shows inline error text
 - no issues in board shows empty guidance
 - no delayed issues shows a positive empty state on dashboard
-- issue detail overlay must close by close button, backdrop click, or escape key
+- issue detail overlay must close by close button or escape key (outside click does not close)
 - mutation failure restores previous UI state and shows a small alert
 
 ## 12. Security and Access
@@ -378,7 +381,7 @@ The MVP uses internal API routes under `/api`.
 
 1. Add SQLite database and seed data
 2. Add auth API routes and cookie session handling
-3. Add issue API routes for list, create, update, and delete
+3. Add issue API routes for list, create, update, and discard
 4. Add user management API routes and lead-only authorization
 5. Implement login page and auth guard against the API
 6. Build board page with status columns
@@ -387,7 +390,7 @@ The MVP uses internal API routes under `/api`.
 9. Build dashboard page
 10. Build users page
 11. Add reusable issue detail modal and connect board and dashboard actions
-12. Add detail-modal follow-up actions for issue edit and delete
+12. Add detail-modal follow-up actions for issue edit and discard
 13. Add change-history persistence and detail-panel history section
 14. Add responsive polishing and fallback state change action
 
@@ -404,7 +407,7 @@ The MVP uses internal API routes under `/api`.
 - Dashboard shows issues created by the current user
 - Ticket detail opens from board and dashboard and shows the selected issue context
 - Detail save updates issue status and metadata
-- Detail delete removes the issue from board and dashboard lists
+- Detail discard changes issue status to `Discarded` without physical deletion
 - Detail history shows who changed status or assignee and when
 - Detail history filter and pagination controls return consistent subsets without losing sort order
 

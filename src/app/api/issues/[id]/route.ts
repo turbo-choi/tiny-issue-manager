@@ -46,10 +46,10 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
   }
 
   try {
-    deleteIssueForUser(user, params.id);
-    return NextResponse.json({ success: true });
+    const issue = deleteIssueForUser(user, params.id);
+    return NextResponse.json({ issue });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Issue could not be deleted.";
+    const message = error instanceof Error ? error.message : "Issue could not be discarded.";
     return NextResponse.json({ message }, { status: getErrorStatus(message) });
   }
 }

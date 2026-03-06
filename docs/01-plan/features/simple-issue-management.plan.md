@@ -129,7 +129,7 @@ The current Jira-based workflow is too complex for the team's real needs. The te
 - Users must be able to view issues by status column on the board screen.
 - Users must be able to open issue details from the board and dashboard screens without losing their current screen context.
 - Users with edit permission must be able to update issue status and metadata from the issue detail view.
-- Users with delete permission must be able to delete issues from the issue detail view.
+- Users with delete permission must be able to discard issues from the issue detail view without physical deletion.
 - Users must be able to review status and assignee change history in the detail view, including actor and timestamp.
 - Users must be able to filter detail history by all records, status records, and assignee records.
 - Users must be able to navigate detail history pages.
@@ -156,7 +156,7 @@ The current Jira-based workflow is too complex for the team's real needs. The te
 - A user can identify delayed issues from one dashboard screen.
 - A user can review the status of personally created issues from one screen.
 - A user can open a ticket detail view from a card title or detail button in one interaction.
-- A permitted user can update or delete an issue from the detail view and see board or dashboard data refresh immediately.
+- A permitted user can update or discard an issue from the detail view and see board or dashboard data refresh immediately.
 - A user can review who changed status or assignee and when from the detail view history section.
 - A user can filter history records and navigate pages in the detail history section.
 - A user can combine period filter with field filter in detail history.
@@ -177,7 +177,7 @@ The current Jira-based workflow is too complex for the team's real needs. The te
 
 - Use a single responsive web application structure.
 - Keep the first release centered on `Login`, `Board`, and `Dashboard`.
-- Limit issue status values to a small fixed set such as `Todo`, `In Progress`, and `Done`.
+- Limit issue status values to a small fixed set such as `Todo`, `In Progress`, `Done`, and `Discarded`.
 - Compute delayed issue state from due date and completion state rather than storing a separate field.
 - Prioritize implementation in this order:
   1. Login and issue model
@@ -185,7 +185,7 @@ The current Jira-based workflow is too complex for the team's real needs. The te
   3. Drag-and-drop status change
   4. Dashboard for delayed and personal views
   5. Reusable issue detail panel for board and dashboard cards
-  6. Detail-panel follow-up actions for issue update and delete
+  6. Detail-panel follow-up actions for issue update and discard
   7. Detail-panel change history section for status and assignee updates
 - Prefer implementation simplicity over future extensibility during MVP delivery.
 
@@ -209,7 +209,7 @@ The current Jira-based workflow is too complex for the team's real needs. The te
 
 - 2026-03-06: Created and approved initial plan for the simple issue management MVP
 - 2026-03-06: Added in-context issue detail view scope for board and dashboard cards
-- 2026-03-06: Added detail-panel follow-up action scope for update and delete
+- 2026-03-06: Added detail-panel follow-up action scope for update and discard
 - 2026-03-06: Added detail-panel change history scope for status and assignee updates
 - 2026-03-06: Added detail history filter and pagination scope
 - 2026-03-06: Added detail history period filter scope for 7-day and 30-day windows

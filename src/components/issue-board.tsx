@@ -61,7 +61,7 @@ export function IssueBoard({
         })}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-4 lg:grid-cols-4">
         {groupedIssues.map((column) => (
           <div
             key={column.status}

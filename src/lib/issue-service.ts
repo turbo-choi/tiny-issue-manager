@@ -69,9 +69,10 @@ export async function updateIssue(id: string, input: UpdateIssueInput) {
 }
 
 export async function deleteIssue(id: string) {
-  await apiFetch<{ success: true }>(`/api/issues/${id}`, {
+  const data = await apiFetch<{ issue: Issue }>(`/api/issues/${id}`, {
     method: "DELETE",
   });
+  return data.issue;
 }
 
 export async function listIssueHistory(

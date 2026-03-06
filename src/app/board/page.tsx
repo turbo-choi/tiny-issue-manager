@@ -110,9 +110,11 @@ export default function BoardPage() {
             setIssues((current) => current.map((issue) => (issue.id === updatedIssue.id ? updatedIssue : issue)));
             setSelectedIssue(updatedIssue);
           }}
-          onIssueDeleted={(issueId) => {
-            setIssues((current) => current.filter((issue) => issue.id !== issueId));
-            setSelectedIssue(null);
+          onIssueDiscarded={(discardedIssue) => {
+            setIssues((current) =>
+              current.map((issue) => (issue.id === discardedIssue.id ? discardedIssue : issue)),
+            );
+            setSelectedIssue(discardedIssue);
           }}
           onClose={() => setSelectedIssue(null)}
         />

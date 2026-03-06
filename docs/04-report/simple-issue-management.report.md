@@ -21,14 +21,14 @@ The implementation now uses Next.js route handlers, cookie sessions, SQLite pers
 - Protected board and dashboard routes
 - Protected lead-only users route
 - Auth API routes for login, session restore, and logout
-- Issue API routes for list, create, update, and delete
+- Issue API routes for list, create, update, and discard
 - Issue history API route for detail-view audit records
 - User API routes for list, create, and update
 - Quick issue registration form
-- Drag-and-drop board with three statuses
+- Drag-and-drop board with fixed statuses including discarded
 - Fallback button for status change
 - Reusable issue detail dialog opened from board and dashboard tickets
-- Detail-dialog actions for status update, metadata edit, and issue delete
+- Detail-dialog actions for status update, metadata edit, and issue discard
 - Detail-dialog change history section with actor and timestamp
 - Detail-dialog history filter and pagination controls
 - Detail-dialog period filter controls for last 7 and 30 days
@@ -70,7 +70,7 @@ The implementation now uses Next.js route handlers, cookie sessions, SQLite pers
 ## Changes
 
 - 2026-03-06: Created completion report after implementation, build validation, and gap analysis
-- 2026-03-06: Updated completion report with detail-dialog follow-up actions and issue delete API
+- 2026-03-06: Updated completion report with detail-dialog follow-up actions and issue discard API
 - 2026-03-06: Updated completion report with status and assignee change history support
 - 2026-03-06: Updated completion report with history filter and pagination support
 - 2026-03-06: Updated completion report with history period filters (7/30 days)

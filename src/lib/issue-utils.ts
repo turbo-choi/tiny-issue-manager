@@ -1,9 +1,9 @@
 import type { Issue, IssueFilter, IssueStatus } from "@/types/issue";
 
-export const ISSUE_STATUSES = ["Todo", "In Progress", "Done"] as const satisfies readonly IssueStatus[];
+export const ISSUE_STATUSES = ["Todo", "In Progress", "Done", "Discarded"] as const satisfies readonly IssueStatus[];
 
 export function isIssueDelayed(issue: Issue, now = Date.now()) {
-  if (!issue.dueDate || issue.status === "Done") {
+  if (!issue.dueDate || issue.status === "Done" || issue.status === "Discarded") {
     return false;
   }
 
@@ -23,6 +23,9 @@ export function getNextStatus(status: IssueStatus): IssueStatus {
   }
   if (status === "In Progress") {
     return "Done";
+  }
+  if (status === "Done") {
+    return "Todo";
   }
   return "Todo";
 }

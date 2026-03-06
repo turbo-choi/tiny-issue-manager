@@ -12,9 +12,10 @@
 - Each issue must include title, description or note, creator, assignee, status, due date, created date, and updated date.
 - Users must be able to view issues in a board grouped by status.
 - Users must be able to open an issue detail view from the board or dashboard without leaving the current workflow.
+- Issue detail popup must not close when clicking outside the popup area.
 - Users must be able to change issue status directly inside the issue detail view.
 - Users with edit permission must be able to update issue title, description, assignee, and due date inside the issue detail view.
-- Users with delete permission must be able to delete an issue inside the issue detail view.
+- Users with delete permission must be able to discard an issue inside the issue detail view instead of physically deleting it.
 - Users must be able to view issue change history in the detail view for status and assignee changes.
 - Each history record must include who changed the issue and when the change happened.
 - Users must be able to filter issue history by `All`, `Status`, and `Assignee` in the detail view.
@@ -79,8 +80,9 @@
 - A user can open one dashboard screen and identify delayed issues immediately.
 - A user can open one screen and review the status of issues they created.
 - A user can open issue details from a ticket card title or detail action and review full context in one place.
+- A user clicking outside the detail popup must keep the popup open until `Close` or `Esc` is used.
 - A permitted user can update issue status and details from the issue detail view and see the board or dashboard reflect changes immediately.
-- A permitted user can delete an issue from the issue detail view and see it removed immediately from board and dashboard lists.
+- A permitted user can discard an issue from the issue detail view and see it moved to a discarded state without physical deletion.
 - A user can open the detail view and check status or assignee change records with actor and timestamp.
 - A user can filter history to status-only or assignee-only records and move between pages.
 - A user can filter history by period (`Last 7 days`, `Last 30 days`) and combine it with field filters.
@@ -104,3 +106,5 @@
 - 2026-03-06: Added issue history filter and pagination requirements
 - 2026-03-06: Added issue history period filter requirements (7 days and 30 days)
 - 2026-03-06: Added custom from/to history period filter requirements
+- 2026-03-06: Changed issue delete behavior to soft delete via discarded status
+- 2026-03-06: Changed detail popup behavior to ignore outside-click close

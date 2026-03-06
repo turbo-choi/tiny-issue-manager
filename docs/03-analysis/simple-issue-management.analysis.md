@@ -19,11 +19,11 @@ The implementation aligns closely with the design intent for the MVP: login, boa
 - [x] Server-side auth API with cookie session handling
 - [x] Persistent SQLite storage for users, sessions, and issues
 - [x] Board screen with quick issue registration
-- [x] Three fixed status columns: `Todo`, `In Progress`, `Done`
+- [x] Fixed status columns including `Todo`, `In Progress`, `Done`, and `Discarded`
 - [x] Drag-and-drop status change on issue cards
 - [x] Mobile-friendly fallback action for status change
 - [x] Reusable issue detail dialog opened from board and dashboard cards
-- [x] Detail dialog actions for status change, metadata edit, and issue delete
+- [x] Detail dialog actions for status change, metadata edit, and issue discard
 - [x] Change history persistence and read API for status and assignee updates
 - [x] Detail dialog history section showing actor and timestamp
 - [x] Detail history filter by all, status, and assignee records

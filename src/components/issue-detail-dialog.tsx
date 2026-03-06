@@ -99,14 +99,14 @@ export function IssueDetailDialog({
   user,
   assigneeOptions,
   onIssueUpdated,
-  onIssueDeleted,
+  onIssueDiscarded,
   onClose,
 }: {
   issue: Issue | null;
   user: SessionUser | null;
   assigneeOptions: ManagedUser[];
   onIssueUpdated: (issue: Issue) => void;
-  onIssueDeleted: (issueId: string) => void;
+  onIssueDiscarded: (issue: Issue) => void;
   onClose: () => void;
 }) {
   const [form, setForm] = useState<{
@@ -236,13 +236,12 @@ export function IssueDetailDialog({
   const delayed = isIssueDelayed(issue);
   const issueId = issue.id;
   const editable = canEditIssue(user, issue);
-  const deletable = canDeleteIssue(user, issue);
+  const deletable = canDeleteIssue(user, issue) && issue.status !== "Discarded";
   const canSubmit = editable && !!form.title.trim() && !!form.assigneeId && !!form.dueDate;
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-end bg-slate-950/45 p-4 sm:items-center sm:justify-center"
-      onClick={onClose}
       role="presentation"
     >
       <section
@@ -399,24 +398,24 @@ export function IssueDetailDialog({
                 type="button"
                 disabled={isSaving || isDeleting}
                 onClick={async () => {
-                  if (!window.confirm("Delete this issue permanently?")) {
+                  if (!window.confirm("Discard this issue? It will stay in history and be marked as discarded.")) {
                     return;
                   }
                   try {
                     setIsDeleting(true);
                     setError("");
-                    await deleteIssueRequest(issueId);
-                    onIssueDeleted(issueId);
+                    const discardedIssue = await deleteIssueRequest(issueId);
+                    onIssueDiscarded(discardedIssue);
                     onClose();
                   } catch (deleteError) {
-                    setError(deleteError instanceof Error ? deleteError.message : "Issue could not be deleted.");
+                    setError(deleteError instanceof Error ? deleteError.message : "Issue could not be discarded.");
                   } finally {
                     setIsDeleting(false);
                   }
                 }}
                 className="rounded-full border border-alert px-4 py-2 text-sm font-medium text-alert transition hover:bg-alertSoft disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isDeleting ? "Deleting..." : "Delete issue"}
+                {isDeleting ? "Discarding..." : "Discard issue"}
               </button>
             ) : null}
           </div>

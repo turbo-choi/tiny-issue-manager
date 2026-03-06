@@ -1,6 +1,6 @@
 import type { UserRole } from "@/types/user";
 
-export type IssueStatus = "Todo" | "In Progress" | "Done";
+export type IssueStatus = "Todo" | "In Progress" | "Done" | "Discarded";
 export type IssueHistoryField = "status" | "assignee";
 export type IssueHistoryFilter = "all" | IssueHistoryField;
 export type IssueHistoryPeriod = "all" | "7d" | "30d";
