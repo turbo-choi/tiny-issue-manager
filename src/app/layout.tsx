@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+
+import { SessionProvider } from "@/components/session-provider";
+import { getRequestSessionUser } from "@/server/session";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -7,9 +11,13 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const user = getRequestSessionUser();
+
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <SessionProvider initialUser={user}>{children}</SessionProvider>
+      </body>
     </html>
   );
 }

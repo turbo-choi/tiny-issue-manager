@@ -1,13 +1,5 @@
 import type { SessionUser, SignInInput } from "@/types/auth";
 
-const SESSION_EVENT = "simple-issue-management:session-change";
-
-function dispatchSessionChange() {
-  if (typeof window !== "undefined") {
-    window.dispatchEvent(new Event(SESSION_EVENT));
-  }
-}
-
 async function apiFetch<T>(path: string, options: RequestInit = {}) {
   const headers = new Headers(options.headers);
   if (!headers.has("Content-Type")) {
@@ -45,32 +37,9 @@ export async function signIn({ email, password }: SignInInput) {
     method: "POST",
     body: JSON.stringify({ email, password }),
   });
-  dispatchSessionChange();
   return data.user;
 }
 
 export async function signOut() {
   await apiFetch("/api/auth/logout", { method: "POST" });
-  dispatchSessionChange();
-}
-
-export async function getSessionUser() {
-  try {
-    const data = await apiFetch<{ user: SessionUser }>("/api/auth/me", {
-      method: "GET",
-      cache: "no-store",
-    });
-    return data.user;
-  } catch {
-    return null;
-  }
-}
-
-export function subscribeToSessionChange(callback: () => void) {
-  if (typeof window === "undefined") {
-    return () => undefined;
-  }
-
-  window.addEventListener(SESSION_EVENT, callback);
-  return () => window.removeEventListener(SESSION_EVENT, callback);
 }

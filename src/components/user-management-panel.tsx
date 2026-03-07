@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { startTransition, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { createUser as createUserRequest, updateUser as updateUserRequest } from "@/lib/user-service";
 import type { CreateUserInput, ManagedUser, UserRole } from "@/types/user";
@@ -43,10 +44,16 @@ function UserRow({
   user: ManagedUser;
   onUpdated: (nextUser: ManagedUser) => void;
 }) {
+  const router = useRouter();
   const [role, setRole] = useState<UserRole>(user.role);
   const [isActive, setIsActive] = useState(user.isActive);
   const [password, setPassword] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    setRole(user.role);
+    setIsActive(user.isActive);
+  }, [user]);
 
   return (
     <tr className="border-t border-line">
@@ -90,6 +97,9 @@ function UserRow({
               });
               setPassword("");
               onUpdated(nextUser);
+              startTransition(() => {
+                router.refresh();
+              });
             } finally {
               setIsSaving(false);
             }
@@ -108,6 +118,7 @@ export function UserManagementPanel({
 }: {
   initialUsers: ManagedUser[];
 }) {
+  const router = useRouter();
   const [users, setUsers] = useState(initialUsers);
   const [form, setForm] = useState<CreateUserInput>({
     ...EMPTY_FORM,
@@ -115,6 +126,10 @@ export function UserManagementPanel({
   });
   const [error, setError] = useState("");
   const [isCreating, setIsCreating] = useState(false);
+
+  useEffect(() => {
+    setUsers(initialUsers);
+  }, [initialUsers]);
 
   return (
     <div className="space-y-5">
@@ -131,6 +146,9 @@ export function UserManagementPanel({
               const nextUser = await createUserRequest(form);
               setUsers((current) => [...current, nextUser]);
               setForm({ ...EMPTY_FORM, password: form.password });
+              startTransition(() => {
+                router.refresh();
+              });
             } catch (submitError) {
               setError(submitError instanceof Error ? submitError.message : "User could not be created.");
             } finally {

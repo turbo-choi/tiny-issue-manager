@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+
 import { formatShortDate, isIssueDelayed } from "@/lib/issue-utils";
 import type { Issue } from "@/types/issue";
 
@@ -82,9 +84,29 @@ export function IssueDashboard({
   userId: string;
   onOpenIssue: (issue: Issue) => void;
 }) {
-  const delayedIssues = issues.filter((issue) => isIssueDelayed(issue));
-  const createdByMe = issues.filter((issue) => issue.creatorId === userId);
-  const completedIssues = issues.filter((issue) => issue.status === "Done");
+  const { delayedIssues, createdByMe, completedIssues } = useMemo(() => {
+    const nextDelayedIssues: Issue[] = [];
+    const nextCreatedByMe: Issue[] = [];
+    const nextCompletedIssues: Issue[] = [];
+
+    for (const issue of issues) {
+      if (isIssueDelayed(issue)) {
+        nextDelayedIssues.push(issue);
+      }
+      if (issue.creatorId === userId) {
+        nextCreatedByMe.push(issue);
+      }
+      if (issue.status === "Done") {
+        nextCompletedIssues.push(issue);
+      }
+    }
+
+    return {
+      delayedIssues: nextDelayedIssues,
+      createdByMe: nextCreatedByMe,
+      completedIssues: nextCompletedIssues,
+    };
+  }, [issues, userId]);
 
   const summaryCards = [
     {
