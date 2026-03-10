@@ -1,4 +1,5 @@
 import type { SessionUser } from "@/types/auth";
+import { normalizeDueDate } from "@/lib/issue-utils";
 import type { CreateIssueInput, IssueStatus, UpdateIssueInput } from "@/types/issue";
 import { createIssue, createIssueEvents, findIssue, getUserById, listIssueEvents, listIssues, updateIssue } from "@/server/db";
 
@@ -9,12 +10,16 @@ export function listIssuesForUser() {
 export function createIssueForUser(input: CreateIssueInput, user: SessionUser) {
   const title = input.title.trim();
   const assignee = getUserById(input.assigneeId);
+  const dueDate = normalizeDueDate(input.dueDate);
 
   if (!title || !input.assigneeId || !input.dueDate) {
     throw new Error("Title, assignee, and due date are required.");
   }
   if (!assignee || !assignee.isActive) {
     throw new Error("Assignee must be an active user.");
+  }
+  if (!dueDate) {
+    throw new Error("Due date is invalid.");
   }
 
   return createIssue({
@@ -24,7 +29,7 @@ export function createIssueForUser(input: CreateIssueInput, user: SessionUser) {
     creatorName: user.name,
     assigneeId: assignee.id,
     assigneeName: assignee.name,
-    dueDate: new Date(input.dueDate).toISOString(),
+    dueDate,
   });
 }
 
@@ -90,11 +95,11 @@ export function updateIssueForUser(user: SessionUser, id: string, input: UpdateI
   }
 
   if (typeof input.dueDate === "string") {
-    const dueDate = new Date(input.dueDate);
-    if (Number.isNaN(dueDate.getTime())) {
+    const dueDate = normalizeDueDate(input.dueDate);
+    if (!dueDate) {
       throw new Error("Due date is invalid.");
     }
-    updates.dueDate = dueDate.toISOString();
+    updates.dueDate = dueDate;
   }
 
   let assigneeName: string | undefined;

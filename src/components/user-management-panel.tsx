@@ -49,10 +49,12 @@ function UserRow({
   const [isActive, setIsActive] = useState(user.isActive);
   const [password, setPassword] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     setRole(user.role);
     setIsActive(user.isActive);
+    setError("");
   }, [user]);
 
   return (
@@ -90,6 +92,7 @@ function UserRow({
           onClick={async () => {
             try {
               setIsSaving(true);
+              setError("");
               const nextUser = await updateUserRequest(user.id, {
                 role,
                 isActive,
@@ -100,6 +103,8 @@ function UserRow({
               startTransition(() => {
                 router.refresh();
               });
+            } catch (submitError) {
+              setError(submitError instanceof Error ? submitError.message : "User could not be updated.");
             } finally {
               setIsSaving(false);
             }
@@ -108,6 +113,7 @@ function UserRow({
         >
           {isSaving ? "Saving..." : "Save"}
         </button>
+        {error ? <p className="mt-2 text-sm text-alert">{error}</p> : null}
       </td>
     </tr>
   );

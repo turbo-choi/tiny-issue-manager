@@ -8,10 +8,11 @@ import { useSession } from "@/hooks/use-session";
 export function LoginForm() {
   const router = useRouter();
   const { signIn } = useSession();
-  const [email, setEmail] = useState("team.lead@example.com");
-  const [password, setPassword] = useState("changeme123!");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const showSeedHint = process.env.NODE_ENV !== "production";
 
   return (
     <main className="mx-auto flex min-h-screen max-w-6xl items-center px-4 py-8 sm:px-6">
@@ -97,13 +98,16 @@ export function LoginForm() {
             <p className="mt-4 rounded-2xl bg-alertSoft px-4 py-3 text-sm text-alert">{error}</p>
           ) : null}
 
-          <div className="mt-6 rounded-3xl bg-sand p-4 text-sm leading-6 text-slate-600">
-            <p className="font-semibold text-ink">Seeded account note</p>
-            <p className="mt-1">
-              Seeded accounts are ready on first run. Use `team.lead@example.com`, `team.member@example.com`, or
-              `team.planner@example.com` with the default password `changeme123!` unless you changed `SEED_USER_PASSWORD`.
-            </p>
-          </div>
+          {showSeedHint ? (
+            <div className="mt-6 rounded-3xl bg-sand p-4 text-sm leading-6 text-slate-600">
+              <p className="font-semibold text-ink">Local seeded account note</p>
+              <p className="mt-1">
+                Local first-run data includes `team.lead@example.com`, `team.member@example.com`, and
+                `team.planner@example.com`. The password defaults to `changeme123!` unless you changed
+                `SEED_USER_PASSWORD`.
+              </p>
+            </div>
+          ) : null}
         </div>
       </section>
     </main>

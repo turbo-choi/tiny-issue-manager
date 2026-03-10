@@ -73,6 +73,28 @@ function createPasswordRecord(password: string) {
   return { salt, hash };
 }
 
+function canSeedDefaultData() {
+  return process.env.NODE_ENV !== "production" || process.env.ALLOW_SEED_DATA === "true";
+}
+
+function getBootstrapLeadConfig() {
+  const email = process.env.BOOTSTRAP_LEAD_EMAIL?.trim().toLowerCase() ?? "";
+  const name = process.env.BOOTSTRAP_LEAD_NAME?.trim() ?? "";
+  const password = process.env.BOOTSTRAP_LEAD_PASSWORD?.trim() ?? "";
+
+  if (!email && !name && !password) {
+    return null;
+  }
+
+  if (!email || !name || !password) {
+    throw new Error(
+      "BOOTSTRAP_LEAD_EMAIL, BOOTSTRAP_LEAD_NAME, and BOOTSTRAP_LEAD_PASSWORD must all be set together.",
+    );
+  }
+
+  return { email, name, password };
+}
+
 export function verifyPassword(password: string, hash: string, salt: string) {
   const derived = scryptSync(password, salt, 64);
   const expected = Buffer.from(hash, "hex");
@@ -83,6 +105,10 @@ function makeDate(offsetDays: number) {
   const value = new Date();
   value.setDate(value.getDate() + offsetDays);
   return value.toISOString();
+}
+
+function makeDueDate(offsetDays: number) {
+  return makeDate(offsetDays).slice(0, 10);
 }
 
 function mapUser(row: Pick<UserRow, "id" | "email" | "name" | "role" | "is_active" | "created_at">): ManagedUser {
@@ -263,6 +289,28 @@ function seedUsers(db: Database.Database) {
     }
   }
 
+  const bootstrapLead = getBootstrapLeadConfig();
+  if (bootstrapLead) {
+    const passwordRecord = createPasswordRecord(bootstrapLead.password);
+    db.prepare(`
+      INSERT INTO users (id, email, name, role, is_active, created_at, password_hash, password_salt)
+      VALUES (?, ?, ?, ?, 1, ?, ?, ?)
+    `).run(
+      createEntityId("user"),
+      bootstrapLead.email,
+      bootstrapLead.name,
+      "lead",
+      new Date().toISOString(),
+      passwordRecord.hash,
+      passwordRecord.salt,
+    );
+    return;
+  }
+
+  if (!canSeedDefaultData()) {
+    return;
+  }
+
   const password = process.env.SEED_USER_PASSWORD ?? "changeme123!";
   const insertUser = db.prepare(`
     INSERT INTO users (id, email, name, role, is_active, created_at, password_hash, password_salt)
@@ -321,7 +369,7 @@ function seedUsers(db: Database.Database) {
       assignee_id: lead.id,
       assignee_name: lead.name,
       status: "Todo",
-      due_date: makeDate(-1),
+      due_date: makeDueDate(-1),
       created_at: makeDate(-4),
       updated_at: makeDate(-2),
     });
@@ -335,7 +383,7 @@ function seedUsers(db: Database.Database) {
       assignee_id: member.id,
       assignee_name: member.name,
       status: "In Progress",
-      due_date: makeDate(1),
+      due_date: makeDueDate(1),
       created_at: makeDate(-2),
       updated_at: makeDate(-1),
     });
@@ -349,7 +397,7 @@ function seedUsers(db: Database.Database) {
       assignee_id: member.id,
       assignee_name: member.name,
       status: "Done",
-      due_date: makeDate(-3),
+      due_date: makeDueDate(-3),
       created_at: makeDate(-6),
       updated_at: makeDate(-1),
     });

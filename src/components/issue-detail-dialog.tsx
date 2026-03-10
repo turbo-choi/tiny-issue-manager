@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-import { ISSUE_STATUSES, formatShortDate, isIssueDelayed } from "@/lib/issue-utils";
+import { ISSUE_STATUSES, formatShortDate, isIssueDelayed, normalizeDueDate } from "@/lib/issue-utils";
 import {
   deleteIssue as deleteIssueRequest,
   listIssueHistory as listIssueHistoryRequest,
@@ -39,11 +39,7 @@ function formatDateTime(value: string) {
 }
 
 function toDateInputValue(value: string) {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return "";
-  }
-  return date.toISOString().slice(0, 10);
+  return normalizeDueDate(value);
 }
 
 function historyFieldLabel(field: IssueHistoryEntry["field"]) {
@@ -238,6 +234,10 @@ export function IssueDetailDialog({
   const editable = canEditIssue(user, issue);
   const deletable = canDeleteIssue(user, issue) && issue.status !== "Discarded";
   const canSubmit = editable && !!form.title.trim() && !!form.assigneeId && !!form.dueDate;
+  const selectedAssigneeName = useMemo(
+    () => assigneeOptions.find((assignee) => assignee.id === form.assigneeId)?.name ?? issue.assigneeName,
+    [assigneeOptions, form.assigneeId, issue.assigneeName],
+  );
 
   return (
     <div
@@ -423,7 +423,7 @@ export function IssueDetailDialog({
 
         <dl className="mt-5 grid gap-3 sm:grid-cols-2">
           <DetailField label="Status" value={form.status} />
-          <DetailField label="Owner" value={issue.assigneeName} />
+          <DetailField label="Owner" value={selectedAssigneeName} />
           <DetailField label="Creator" value={issue.creatorName} />
           <DetailField label="Due date" value={formatShortDate(issue.dueDate)} />
           <DetailField label="Created" value={formatDateTime(issue.createdAt)} />
