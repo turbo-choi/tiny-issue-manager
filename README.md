@@ -118,6 +118,8 @@ For the full production procedure, see `DEPLOYMENT.md`.
 - `docs/02-design/features/simple-issue-management.design.md`: feature-level design document
 - `docs/03-analysis/simple-issue-management.analysis.md`: design vs implementation gap analysis
 - `docs/04-report/simple-issue-management.report.md`: completion report
+- `docs/05-architecture/simple-issue-management-flow.md`: runtime process flow diagrams
+- `docs/05-architecture/simple-issue-management-database.md`: SQLite database and ER diagrams
 - `src/app`: Next.js app routes
 - `src/components`: board, dashboard, shell, and auth UI
 - `src/lib`: auth, issue, and user API clients

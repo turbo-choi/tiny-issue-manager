@@ -2,6 +2,7 @@
 .bkit-codex/
 .agents/
 .codex/
+.playwright-cli/
 
 # Dependencies and build outputs
 node_modules/

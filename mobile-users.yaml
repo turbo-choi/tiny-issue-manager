@@ -1,0 +1,102 @@
+- generic [active] [ref=e1]:
+  - alert [ref=e30]
+  - generic [ref=e373]:
+    - banner [ref=e374]:
+      - generic [ref=e375]:
+        - generic [ref=e376]:
+          - paragraph [ref=e377]: Simple Issue Management
+          - generic [ref=e378]:
+            - heading "User management" [level=1] [ref=e379]
+            - paragraph [ref=e380]: Create teammates, assign roles, and control access from a single admin view.
+        - generic [ref=e381]:
+          - generic [ref=e382]:
+            - paragraph [ref=e383]: Signed in as
+            - paragraph [ref=e384]: Team Lead
+            - paragraph [ref=e385]: team.lead@example.com
+            - paragraph [ref=e386]: lead
+          - generic [ref=e387]:
+            - link "Board" [ref=e388] [cursor=pointer]:
+              - /url: /board
+            - link "Dashboard" [ref=e389] [cursor=pointer]:
+              - /url: /dashboard
+            - link "Users" [ref=e390] [cursor=pointer]:
+              - /url: /users
+            - button "Logout" [ref=e391] [cursor=pointer]
+    - main [ref=e392]:
+      - generic [ref=e393]:
+        - generic [ref=e394]:
+          - paragraph [ref=e395]: Lead tools
+          - heading "Create user" [level=2] [ref=e396]
+          - generic [ref=e397]:
+            - textbox "Name" [ref=e398]
+            - textbox "Email" [ref=e399]
+            - combobox [ref=e400]:
+              - option "lead"
+              - option "member" [selected]
+              - option "planner"
+            - textbox "Password" [ref=e401]: changeme123!
+            - button "Create user" [ref=e403] [cursor=pointer]
+        - generic [ref=e404]:
+          - generic [ref=e405]:
+            - paragraph [ref=e406]: User directory
+            - heading "Manage roles and access" [level=2] [ref=e407]
+          - table [ref=e409]:
+            - rowgroup [ref=e410]:
+              - row "User Role Status Reset password Action" [ref=e411]:
+                - columnheader "User" [ref=e412]
+                - columnheader "Role" [ref=e413]
+                - columnheader "Status" [ref=e414]
+                - columnheader "Reset password" [ref=e415]
+                - columnheader "Action" [ref=e416]
+            - rowgroup [ref=e417]:
+              - row "Team Lead team.lead@example.com lead Active Save" [ref=e418]:
+                - cell "Team Lead team.lead@example.com" [ref=e419]:
+                  - paragraph [ref=e420]: Team Lead
+                  - paragraph [ref=e421]: team.lead@example.com
+                - cell "lead" [ref=e422]:
+                  - combobox [ref=e423]:
+                    - option "lead" [selected]
+                    - option "member"
+                    - option "planner"
+                - cell "Active" [ref=e424]:
+                  - generic [ref=e425]:
+                    - checkbox "Active" [checked] [ref=e426]
+                    - text: Active
+                - cell [ref=e427]:
+                  - textbox "Optional reset password" [ref=e428]
+                - cell "Save" [ref=e429]:
+                  - button "Save" [ref=e430] [cursor=pointer]
+              - row "Team Member team.member@example.com member Active Save" [ref=e431]:
+                - cell "Team Member team.member@example.com" [ref=e432]:
+                  - paragraph [ref=e433]: Team Member
+                  - paragraph [ref=e434]: team.member@example.com
+                - cell "member" [ref=e435]:
+                  - combobox [ref=e436]:
+                    - option "lead"
+                    - option "member" [selected]
+                    - option "planner"
+                - cell "Active" [ref=e437]:
+                  - generic [ref=e438]:
+                    - checkbox "Active" [checked] [ref=e439]
+                    - text: Active
+                - cell [ref=e440]:
+                  - textbox "Optional reset password" [ref=e441]
+                - cell "Save" [ref=e442]:
+                  - button "Save" [ref=e443] [cursor=pointer]
+              - row "Planner team.planner@example.com planner Active Save" [ref=e444]:
+                - cell "Planner team.planner@example.com" [ref=e445]:
+                  - paragraph [ref=e446]: Planner
+                  - paragraph [ref=e447]: team.planner@example.com
+                - cell "planner" [ref=e448]:
+                  - combobox [ref=e449]:
+                    - option "lead"
+                    - option "member"
+                    - option "planner" [selected]
+                - cell "Active" [ref=e450]:
+                  - generic [ref=e451]:
+                    - checkbox "Active" [checked] [ref=e452]
+                    - text: Active
+                - cell [ref=e453]:
+                  - textbox "Optional reset password" [ref=e454]
+                - cell "Save" [ref=e455]:
+                  - button "Save" [ref=e456] [cursor=pointer]

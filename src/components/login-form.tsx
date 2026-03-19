@@ -69,6 +69,7 @@ export function LoginForm() {
               <span className="text-sm font-medium text-ink">Email</span>
               <input
                 type="email"
+                autoComplete="email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 className="w-full rounded-2xl border border-line bg-white px-4 py-3 text-sm outline-none transition focus:border-accent"
@@ -79,6 +80,7 @@ export function LoginForm() {
               <span className="text-sm font-medium text-ink">Password</span>
               <input
                 type="password"
+                autoComplete="current-password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 className="w-full rounded-2xl border border-line bg-white px-4 py-3 text-sm outline-none transition focus:border-accent"
