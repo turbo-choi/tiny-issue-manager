@@ -15,7 +15,7 @@ async function getAuthenticatedUser() {
 export async function GET() {
   const user = await getAuthenticatedUser();
   if (!user) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ message: "로그인이 필요합니다." }, { status: 401 });
   }
 
   const issues = listIssuesForUser();
@@ -25,7 +25,7 @@ export async function GET() {
 export async function POST(request: Request) {
   const user = await getAuthenticatedUser();
   if (!user) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ message: "로그인이 필요합니다." }, { status: 401 });
   }
 
   try {
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     const issue = createIssueForUser(input, user);
     return NextResponse.json({ issue }, { status: 201 });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Issue could not be created.";
+    const message = error instanceof Error ? error.message : "이슈를 등록하지 못했습니다.";
     return NextResponse.json({ message }, { status: 400 });
   }
 }

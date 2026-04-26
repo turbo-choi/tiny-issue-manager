@@ -13,13 +13,13 @@ export function createIssueForUser(input: CreateIssueInput, user: SessionUser) {
   const dueDate = normalizeDueDate(input.dueDate);
 
   if (!title || !input.assigneeId || !input.dueDate) {
-    throw new Error("Title, assignee, and due date are required.");
+    throw new Error("제목, 담당자, 마감일을 입력해주세요.");
   }
   if (!assignee || !assignee.isActive) {
-    throw new Error("Assignee must be an active user.");
+    throw new Error("담당자는 활성 사용자여야 합니다.");
   }
   if (!dueDate) {
-    throw new Error("Due date is invalid.");
+    throw new Error("마감일 형식이 올바르지 않습니다.");
   }
 
   return createIssue({
@@ -73,7 +73,7 @@ export function updateIssueStatusForUser(user: SessionUser, id: string, status: 
 
 export function updateIssueForUser(user: SessionUser, id: string, input: UpdateIssueInput) {
   if (!canUpdateIssue(user, id)) {
-    throw new Error("You do not have permission to update this issue.");
+    throw new Error("이 이슈를 수정할 권한이 없습니다.");
   }
 
   const updates: UpdateIssueInput = {};
@@ -81,7 +81,7 @@ export function updateIssueForUser(user: SessionUser, id: string, input: UpdateI
   if (typeof input.title === "string") {
     const title = input.title.trim();
     if (!title) {
-      throw new Error("Title cannot be empty.");
+      throw new Error("제목은 비워둘 수 없습니다.");
     }
     updates.title = title;
   }
@@ -97,7 +97,7 @@ export function updateIssueForUser(user: SessionUser, id: string, input: UpdateI
   if (typeof input.dueDate === "string") {
     const dueDate = normalizeDueDate(input.dueDate);
     if (!dueDate) {
-      throw new Error("Due date is invalid.");
+      throw new Error("마감일 형식이 올바르지 않습니다.");
     }
     updates.dueDate = dueDate;
   }
@@ -106,19 +106,19 @@ export function updateIssueForUser(user: SessionUser, id: string, input: UpdateI
   if (typeof input.assigneeId === "string") {
     const assignee = getUserById(input.assigneeId);
     if (!assignee || !assignee.isActive) {
-      throw new Error("Assignee must be an active user.");
+      throw new Error("담당자는 활성 사용자여야 합니다.");
     }
     updates.assigneeId = assignee.id;
     assigneeName = assignee.name;
   }
 
   if (Object.keys(updates).length === 0) {
-    throw new Error("At least one editable field is required.");
+    throw new Error("수정할 항목이 하나 이상 필요합니다.");
   }
 
   const beforeIssue = findIssue(id);
   if (!beforeIssue) {
-    throw new Error("Issue not found.");
+    throw new Error("이슈를 찾을 수 없습니다.");
   }
 
   const updatedIssue = updateIssue(id, {
@@ -166,7 +166,7 @@ export function updateIssueForUser(user: SessionUser, id: string, input: UpdateI
 
 export function deleteIssueForUser(user: SessionUser, id: string) {
   if (!canDeleteIssue(user, id)) {
-    throw new Error("You do not have permission to delete this issue.");
+    throw new Error("이 이슈를 삭제할 권한이 없습니다.");
   }
 
   return updateIssueForUser(user, id, { status: "Discarded" });
@@ -186,7 +186,7 @@ export function listIssueHistoryForUser(
 ) {
   const issue = findIssue(id);
   if (!issue) {
-    throw new Error("Issue not found.");
+    throw new Error("이슈를 찾을 수 없습니다.");
   }
   return listIssueEvents(id, options);
 }

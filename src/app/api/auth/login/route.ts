@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     const { email, password } = (await request.json()) as { email?: string; password?: string };
 
     if (!email || !password) {
-      return NextResponse.json({ message: "Email and password are required." }, { status: 400 });
+      return NextResponse.json({ message: "이메일과 비밀번호를 입력해주세요." }, { status: 400 });
     }
 
     const { user, signedSession } = loginWithPassword(email, password);
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     response.cookies.set(getSessionCookieName(), signedSession, sessionCookieOptions());
     return response;
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Login failed.";
+    const message = error instanceof Error ? error.message : "로그인에 실패했습니다.";
     return NextResponse.json({ message }, { status: 401 });
   }
 }

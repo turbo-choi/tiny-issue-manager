@@ -6,15 +6,15 @@ import { getRequestSessionUser } from "@/server/session";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Simple Issue Management",
-  description: "A lightweight issue board and dashboard for teams who do not need Jira complexity.",
+  title: "간단 이슈 관리",
+  description: "복잡한 도구 없이 팀 이슈를 관리하는 가벼운 보드와 대시보드입니다.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const user = getRequestSessionUser();
 
   return (
-    <html lang="en">
+    <html lang="ko">
       <body>
         <SessionProvider initialUser={user}>{children}</SessionProvider>
       </body>

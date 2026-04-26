@@ -75,12 +75,12 @@ export function loginWithPassword(email: string, password: string) {
   const user = getUserByEmail(normalizedEmail);
 
   if (!user || user.is_active !== 1) {
-    throw new Error("User not found.");
+    throw new Error("사용자를 찾을 수 없습니다.");
   }
 
   const isValid = verifyPassword(password, user.password_hash, user.password_salt);
   if (!isValid) {
-    throw new Error("Invalid credentials.");
+    throw new Error("이메일 또는 비밀번호가 올바르지 않습니다.");
   }
 
   purgeExpiredSessions(new Date().toISOString());

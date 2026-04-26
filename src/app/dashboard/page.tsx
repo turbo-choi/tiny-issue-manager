@@ -11,8 +11,8 @@ export default function DashboardPage() {
 
   return (
     <AppShell
-      title="Monitoring dashboard"
-      description="Use one screen to see delayed work, the issues you created, and what has already been completed."
+      title="모니터링 대시보드"
+      description="지연 업무, 내가 만든 이슈, 완료된 결과를 한 화면에서 확인합니다."
     >
       <DashboardPageClient initialIssues={issues} assigneeOptions={assigneeOptions} user={user} />
     </AppShell>

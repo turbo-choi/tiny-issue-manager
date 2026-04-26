@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { ISSUE_STATUSES, formatShortDate, isIssueDelayed, normalizeDueDate } from "@/lib/issue-utils";
+import { HISTORY_FIELD_LABELS, formatIssueStatus, formatUserRole } from "@/lib/i18n";
 import {
   deleteIssue as deleteIssueRequest,
   listIssueHistory as listIssueHistoryRequest,
@@ -21,18 +22,18 @@ import type { ManagedUser } from "@/types/user";
 
 const HISTORY_PAGE_SIZE = 5;
 const HISTORY_FILTERS: Array<{ label: string; value: IssueHistoryFilter }> = [
-  { label: "All", value: "all" },
-  { label: "Status", value: "status" },
-  { label: "Assignee", value: "assignee" },
+  { label: "전체", value: "all" },
+  { label: "상태", value: "status" },
+  { label: "담당자", value: "assignee" },
 ];
 const HISTORY_PERIODS: Array<{ label: string; value: IssueHistoryPeriod }> = [
-  { label: "All time", value: "all" },
-  { label: "Last 7 days", value: "7d" },
-  { label: "Last 30 days", value: "30d" },
+  { label: "전체 기간", value: "all" },
+  { label: "최근 7일", value: "7d" },
+  { label: "최근 30일", value: "30d" },
 ];
 
 function formatDateTime(value: string) {
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("ko-KR", {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
@@ -43,10 +44,14 @@ function toDateInputValue(value: string) {
 }
 
 function historyFieldLabel(field: IssueHistoryEntry["field"]) {
+  return HISTORY_FIELD_LABELS[field];
+}
+
+function historyValueLabel(field: IssueHistoryEntry["field"], value: string) {
   if (field === "status") {
-    return "Status";
+    return formatIssueStatus(value);
   }
-  return "Assignee";
+  return value;
 }
 
 function canEditIssue(user: SessionUser | null, issue: Issue) {
@@ -83,9 +88,9 @@ function DetailField({
   value: string;
 }) {
   return (
-    <div className="rounded-2xl bg-sand px-4 py-3">
-      <dt className="text-xs uppercase tracking-[0.18em] text-slate-500">{label}</dt>
-      <dd className="mt-1 text-sm font-medium text-ink">{value}</dd>
+    <div className="rounded-xl bg-sand px-4 py-3">
+      <dt className="text-xs uppercase tracking-[0.18em] text-muted">{label}</dt>
+      <dd className="mt-1 text-sm font-medium text-body">{value}</dd>
     </div>
   );
 }
@@ -210,7 +215,7 @@ export function IssueDetailDialog({
         }
       } catch (loadError) {
         if (active) {
-          setHistoryError(loadError instanceof Error ? loadError.message : "History could not be loaded.");
+          setHistoryError(loadError instanceof Error ? loadError.message : "변경 이력을 불러오지 못했습니다.");
         }
       } finally {
         if (active) {
@@ -248,35 +253,35 @@ export function IssueDetailDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby="issue-detail-title"
-        className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[32px] border border-line bg-paper p-5 shadow-2xl sm:p-6"
+        className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl border border-line bg-paper p-5 shadow-nav sm:p-6"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-accent">Issue detail</p>
-            <h2 id="issue-detail-title" className="text-2xl font-semibold text-ink">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">이슈 상세</p>
+            <h2 id="issue-detail-title" className="text-2xl font-semibold text-brand">
               {issue.title}
             </h2>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full border border-line bg-white px-4 py-2 text-sm font-medium text-slate-600 transition hover:border-accent hover:text-accent"
+            className="rounded-full border border-line bg-white px-4 py-2 text-sm font-medium text-body transition hover:border-accent hover:text-accent"
           >
-            Close
+            닫기
           </button>
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
           <span className="rounded-full bg-accentSoft px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-            {issue.status}
+            {formatIssueStatus(issue.status)}
           </span>
           {delayed ? (
-            <span className="rounded-full bg-alertSoft px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-alert">
-              Delayed
+            <span className="whitespace-nowrap rounded-full bg-alertSoft px-3 py-1 text-xs font-semibold text-alert">
+              지연
             </span>
           ) : null}
-          <span className="rounded-full bg-sand px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-600">
+          <span className="rounded-full bg-sand px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-body">
             {issue.id}
           </span>
         </div>
@@ -300,7 +305,7 @@ export function IssueDetailDialog({
               });
               onIssueUpdated(updated);
             } catch (submitError) {
-              setError(submitError instanceof Error ? submitError.message : "Issue could not be updated.");
+              setError(submitError instanceof Error ? submitError.message : "이슈를 수정하지 못했습니다.");
             } finally {
               setIsSaving(false);
             }
@@ -308,89 +313,89 @@ export function IssueDetailDialog({
         >
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="space-y-2">
-              <span className="text-xs uppercase tracking-[0.18em] text-slate-500">Status</span>
+              <span className="text-xs uppercase tracking-[0.18em] text-muted">상태</span>
               <select
                 disabled={!editable}
                 value={form.status}
                 onChange={(event) =>
                   setForm((current) => ({ ...current, status: event.target.value as IssueStatus }))
                 }
-                className="w-full rounded-2xl border border-line bg-white px-4 py-3 text-sm outline-none transition focus:border-accent disabled:bg-sand disabled:text-slate-500"
+                className="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none transition focus:border-accent disabled:bg-sand disabled:text-muted"
               >
                 {ISSUE_STATUSES.map((status) => (
                   <option key={status} value={status}>
-                    {status}
+                    {formatIssueStatus(status)}
                   </option>
                 ))}
               </select>
             </label>
 
             <label className="space-y-2">
-              <span className="text-xs uppercase tracking-[0.18em] text-slate-500">Assignee</span>
+              <span className="text-xs uppercase tracking-[0.18em] text-muted">담당자</span>
               <select
                 disabled={!editable}
                 value={form.assigneeId}
                 onChange={(event) => setForm((current) => ({ ...current, assigneeId: event.target.value }))}
-                className="w-full rounded-2xl border border-line bg-white px-4 py-3 text-sm outline-none transition focus:border-accent disabled:bg-sand disabled:text-slate-500"
+                className="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none transition focus:border-accent disabled:bg-sand disabled:text-muted"
               >
-                <option value="">Select assignee</option>
+                <option value="">담당자 선택</option>
                 {assigneeOptions.map((assignee) => (
                   <option key={assignee.id} value={assignee.id}>
-                    {assignee.name} ({assignee.role})
+                    {assignee.name} ({formatUserRole(assignee.role)})
                   </option>
                 ))}
               </select>
             </label>
 
             <label className="space-y-2 sm:col-span-2">
-              <span className="text-xs uppercase tracking-[0.18em] text-slate-500">Title</span>
+              <span className="text-xs uppercase tracking-[0.18em] text-muted">제목</span>
               <input
                 disabled={!editable}
                 value={form.title}
                 onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))}
-                className="w-full rounded-2xl border border-line bg-white px-4 py-3 text-sm outline-none transition focus:border-accent disabled:bg-sand disabled:text-slate-500"
+                className="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none transition focus:border-accent disabled:bg-sand disabled:text-muted"
               />
             </label>
 
             <label className="space-y-2">
-              <span className="text-xs uppercase tracking-[0.18em] text-slate-500">Due date</span>
+              <span className="text-xs uppercase tracking-[0.18em] text-muted">마감일</span>
               <input
                 disabled={!editable}
                 type="date"
                 value={form.dueDate}
                 onChange={(event) => setForm((current) => ({ ...current, dueDate: event.target.value }))}
-                className="w-full rounded-2xl border border-line bg-white px-4 py-3 text-sm outline-none transition focus:border-accent disabled:bg-sand disabled:text-slate-500"
+                className="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none transition focus:border-accent disabled:bg-sand disabled:text-muted"
               />
             </label>
 
             <label className="space-y-2 sm:col-span-2">
-              <span className="text-xs uppercase tracking-[0.18em] text-slate-500">Description</span>
+              <span className="text-xs uppercase tracking-[0.18em] text-muted">설명</span>
               <textarea
                 disabled={!editable}
                 rows={4}
                 value={form.description}
                 onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))}
-                className="w-full rounded-2xl border border-line bg-white px-4 py-3 text-sm outline-none transition focus:border-accent disabled:bg-sand disabled:text-slate-500"
+                className="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none transition focus:border-accent disabled:bg-sand disabled:text-muted"
               />
             </label>
           </div>
 
           {!editable ? (
-            <p className="rounded-2xl bg-sand px-4 py-3 text-sm text-slate-600">
-              You can review this issue, but your role does not allow editing this ticket.
+            <p className="rounded-xl bg-sand px-4 py-3 text-sm text-body">
+              이 이슈는 확인만 가능합니다. 현재 역할에는 수정 권한이 없습니다.
             </p>
           ) : null}
 
-          {error ? <p className="rounded-2xl bg-alertSoft px-4 py-3 text-sm text-alert">{error}</p> : null}
+          {error ? <p className="rounded-xl bg-alertSoft px-4 py-3 text-sm text-alert">{error}</p> : null}
 
           <div className="flex flex-wrap justify-end gap-2">
             {editable ? (
               <button
                 type="submit"
                 disabled={isSaving || isDeleting || !canSubmit}
-                className="rounded-full bg-ink px-4 py-2 text-sm font-medium text-white transition hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-brand disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isSaving ? "Saving..." : "Save changes"}
+                {isSaving ? "저장 중..." : "변경사항 저장"}
               </button>
             ) : null}
             {deletable ? (
@@ -398,7 +403,7 @@ export function IssueDetailDialog({
                 type="button"
                 disabled={isSaving || isDeleting}
                 onClick={async () => {
-                  if (!window.confirm("Discard this issue? It will stay in history and be marked as discarded.")) {
+                  if (!window.confirm("이 이슈를 폐기할까요? 이력은 유지되고 상태만 폐기됨으로 표시됩니다.")) {
                     return;
                   }
                   try {
@@ -408,32 +413,32 @@ export function IssueDetailDialog({
                     onIssueDiscarded(discardedIssue);
                     onClose();
                   } catch (deleteError) {
-                    setError(deleteError instanceof Error ? deleteError.message : "Issue could not be discarded.");
+                    setError(deleteError instanceof Error ? deleteError.message : "이슈를 폐기하지 못했습니다.");
                   } finally {
                     setIsDeleting(false);
                   }
                 }}
                 className="rounded-full border border-alert px-4 py-2 text-sm font-medium text-alert transition hover:bg-alertSoft disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isDeleting ? "Discarding..." : "Discard issue"}
+                {isDeleting ? "폐기 중..." : "이슈 폐기"}
               </button>
             ) : null}
           </div>
         </form>
 
         <dl className="mt-5 grid gap-3 sm:grid-cols-2">
-          <DetailField label="Status" value={form.status} />
-          <DetailField label="Owner" value={selectedAssigneeName} />
-          <DetailField label="Creator" value={issue.creatorName} />
-          <DetailField label="Due date" value={formatShortDate(issue.dueDate)} />
-          <DetailField label="Created" value={formatDateTime(issue.createdAt)} />
-          <DetailField label="Updated" value={formatDateTime(issue.updatedAt)} />
+          <DetailField label="상태" value={formatIssueStatus(form.status)} />
+          <DetailField label="담당자" value={selectedAssigneeName} />
+          <DetailField label="작성자" value={issue.creatorName} />
+          <DetailField label="마감일" value={formatShortDate(issue.dueDate)} />
+          <DetailField label="등록일" value={formatDateTime(issue.createdAt)} />
+          <DetailField label="수정일" value={formatDateTime(issue.updatedAt)} />
         </dl>
 
-        <section className="mt-5 rounded-[28px] border border-line bg-white p-5">
+        <section className="mt-5 rounded-xl border border-line bg-white p-5">
           <div className="mb-3">
-            <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Change history</p>
-            <h3 className="mt-1 text-lg font-semibold text-ink">Status and assignee updates</h3>
+            <p className="text-xs uppercase tracking-[0.18em] text-muted">변경 이력</p>
+            <h3 className="mt-1 text-lg font-semibold text-brand">상태와 담당자 변경</h3>
           </div>
 
           <div className="mb-3 flex flex-wrap gap-2">
@@ -450,7 +455,7 @@ export function IssueDetailDialog({
                   className={`rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.15em] transition ${
                     active
                       ? "bg-accent text-white"
-                      : "border border-line bg-paper text-slate-600 hover:border-accent hover:text-accent"
+                      : "border border-line bg-paper text-body hover:border-accent hover:text-accent"
                   }`}
                 >
                   {entry.label}
@@ -476,8 +481,8 @@ export function IssueDetailDialog({
                   }}
                   className={`rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.15em] transition ${
                     active
-                      ? "bg-ink text-white"
-                      : "border border-line bg-paper text-slate-600 hover:border-accent hover:text-accent"
+                      ? "bg-accent text-white"
+                      : "border border-line bg-paper text-body hover:border-accent hover:text-accent"
                   }`}
                 >
                   {entry.label}
@@ -486,25 +491,25 @@ export function IssueDetailDialog({
             })}
           </div>
 
-          <div className="mb-3 rounded-2xl border border-line bg-paper p-3">
-            <p className="mb-2 text-xs uppercase tracking-[0.15em] text-slate-500">Custom range</p>
+          <div className="mb-3 rounded-xl border border-line bg-paper p-3">
+            <p className="mb-2 text-xs uppercase tracking-[0.15em] text-muted">기간 직접 선택</p>
             <div className="flex flex-wrap items-end gap-2">
               <label className="space-y-1">
-                <span className="text-[11px] uppercase tracking-[0.12em] text-slate-500">From</span>
+                <span className="text-[11px] uppercase tracking-[0.12em] text-muted">시작일</span>
                 <input
                   type="date"
                   value={historyFromInput}
                   onChange={(event) => setHistoryFromInput(event.target.value)}
-                  className="rounded-xl border border-line bg-white px-3 py-2 text-xs text-slate-700 outline-none transition focus:border-accent"
+                  className="rounded-xl border border-line bg-white px-3 py-2 text-xs text-body outline-none transition focus:border-accent"
                 />
               </label>
               <label className="space-y-1">
-                <span className="text-[11px] uppercase tracking-[0.12em] text-slate-500">To</span>
+                <span className="text-[11px] uppercase tracking-[0.12em] text-muted">종료일</span>
                 <input
                   type="date"
                   value={historyToInput}
                   onChange={(event) => setHistoryToInput(event.target.value)}
-                  className="rounded-xl border border-line bg-white px-3 py-2 text-xs text-slate-700 outline-none transition focus:border-accent"
+                  className="rounded-xl border border-line bg-white px-3 py-2 text-xs text-body outline-none transition focus:border-accent"
                 />
               </label>
               <button
@@ -515,7 +520,7 @@ export function IssueDetailDialog({
                     historyToInput &&
                     new Date(historyFromInput).getTime() > new Date(historyToInput).getTime()
                   ) {
-                    setHistoryError("`from` date must be before or equal to `to` date.");
+                    setHistoryError("시작일은 종료일보다 늦을 수 없습니다.");
                     return;
                   }
                   setHistoryError("");
@@ -524,9 +529,9 @@ export function IssueDetailDialog({
                   setHistoryTo(historyToInput);
                   setHistoryPage(1);
                 }}
-                className="rounded-full bg-ink px-3 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-accent"
+                className="rounded-full bg-accent px-3 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-white hover:bg-brand"
               >
-                Apply
+                적용
               </button>
               <button
                 type="button"
@@ -538,60 +543,61 @@ export function IssueDetailDialog({
                   setHistoryTo("");
                   setHistoryPage(1);
                 }}
-                className="rounded-full border border-line bg-white px-3 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-slate-600 transition hover:border-accent hover:text-accent"
+                className="rounded-full border border-line bg-white px-3 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-body transition hover:border-accent hover:text-accent"
               >
-                Clear
+                초기화
               </button>
             </div>
           </div>
 
-          {historyError ? <p className="rounded-2xl bg-alertSoft px-4 py-3 text-sm text-alert">{historyError}</p> : null}
+          {historyError ? <p className="rounded-xl bg-alertSoft px-4 py-3 text-sm text-alert">{historyError}</p> : null}
 
           {isHistoryLoading ? (
-            <p className="rounded-2xl bg-sand px-4 py-5 text-sm text-slate-600">Loading change history...</p>
+            <p className="rounded-xl bg-sand px-4 py-5 text-sm text-body">변경 이력을 불러오는 중...</p>
           ) : history.length === 0 ? (
-            <p className="rounded-2xl bg-sand px-4 py-5 text-sm text-slate-600">
-              No status or assignee changes have been recorded yet.
+            <p className="rounded-xl bg-sand px-4 py-5 text-sm text-body">
+              아직 상태나 담당자 변경 이력이 없습니다.
             </p>
           ) : (
             <div className="space-y-3">
               <ul className="space-y-2">
                 {history.map((entry) => (
-                  <li key={entry.id} className="rounded-2xl border border-line bg-paper px-4 py-3">
-                    <p className="text-sm text-ink">
+                  <li key={entry.id} className="rounded-xl border border-line bg-paper px-4 py-3">
+                    <p className="text-sm text-body">
                       <span className="font-semibold">{entry.actorName}</span>
-                      <span className="text-slate-500"> ({entry.actorRole}) changed </span>
+                      <span className="text-muted"> ({formatUserRole(entry.actorRole)})님이 </span>
                       <span className="font-semibold">{historyFieldLabel(entry.field)}</span>
-                      <span className="text-slate-500"> from </span>
-                      <span className="font-semibold">{entry.fromValue}</span>
-                      <span className="text-slate-500"> to </span>
-                      <span className="font-semibold">{entry.toValue}</span>
+                      <span className="text-muted">를 </span>
+                      <span className="font-semibold">{historyValueLabel(entry.field, entry.fromValue)}</span>
+                      <span className="text-muted">에서 </span>
+                      <span className="font-semibold">{historyValueLabel(entry.field, entry.toValue)}</span>
+                      <span className="text-muted">로 변경했습니다.</span>
                     </p>
-                    <p className="mt-1 text-xs uppercase tracking-[0.15em] text-slate-400">{formatDateTime(entry.createdAt)}</p>
+                    <p className="mt-1 text-xs uppercase tracking-[0.15em] text-muted">{formatDateTime(entry.createdAt)}</p>
                   </li>
                 ))}
               </ul>
 
-              <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-sand px-4 py-3">
-                <p className="text-xs uppercase tracking-[0.15em] text-slate-500">
-                  Page {historyPagination.page} · Total {historyPagination.total}
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-sand px-4 py-3">
+                <p className="text-xs uppercase tracking-[0.15em] text-muted">
+                  {historyPagination.page}페이지 · 총 {historyPagination.total}건
                 </p>
                 <div className="flex gap-2">
                   <button
                     type="button"
                     disabled={historyPagination.page <= 1 || isHistoryLoading}
                     onClick={() => setHistoryPage((current) => Math.max(1, current - 1))}
-                    className="rounded-full border border-line bg-white px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.15em] text-slate-600 transition hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-60"
+                    className="rounded-full border border-line bg-white px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.15em] text-body transition hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    Prev
+                    이전
                   </button>
                   <button
                     type="button"
                     disabled={!historyPagination.hasNext || isHistoryLoading}
                     onClick={() => setHistoryPage((current) => current + 1)}
-                    className="rounded-full border border-line bg-white px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.15em] text-slate-600 transition hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-60"
+                    className="rounded-full border border-line bg-white px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.15em] text-body transition hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    Next
+                    다음
                   </button>
                 </div>
               </div>

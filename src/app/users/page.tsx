@@ -9,8 +9,8 @@ export default function UsersPage() {
 
   return (
     <AppShell
-      title="User management"
-      description="Create teammates, assign roles, and control access from a single admin view."
+      title="사용자 관리"
+      description="팀원을 생성하고 역할과 접근 권한을 한 곳에서 관리합니다."
     >
       <UserManagementPanel initialUsers={users} />
     </AppShell>

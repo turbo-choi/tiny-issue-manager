@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import type { CreateIssueInput } from "@/types/issue";
 import type { ManagedUser } from "@/types/user";
+import { formatUserRole } from "@/lib/i18n";
 
 const EMPTY_FORM: CreateIssueInput = {
   title: "",
@@ -25,13 +26,13 @@ export function IssueForm({
   const [error, setError] = useState("");
 
   return (
-    <section className="rounded-[28px] border border-line bg-paper p-5 shadow-card">
+    <section className="rounded-xl border border-line bg-paper p-5 shadow-card">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-accent">Quick capture</p>
-          <h2 className="mt-2 text-xl font-semibold text-ink">Register a new issue</h2>
-          <p className="mt-1 text-sm text-slate-500">
-            Keep it small. Title, assignee, and due date are enough for the MVP.
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">빠른 등록</p>
+          <h2 className="mt-2 text-xl font-semibold text-brand">새 이슈 등록</h2>
+          <p className="mt-1 text-sm text-muted">
+            제목, 담당자, 마감일만 입력해도 바로 업무를 시작할 수 있습니다.
           </p>
         </div>
       </div>
@@ -45,54 +46,54 @@ export function IssueForm({
             await onSubmit(form);
             setForm(EMPTY_FORM);
           } catch (submitError) {
-            setError(submitError instanceof Error ? submitError.message : "Issue could not be created.");
+            setError(submitError instanceof Error ? submitError.message : "이슈를 등록하지 못했습니다.");
           }
         }}
       >
         <label className="space-y-2">
-          <span className="text-sm font-medium text-ink">Title</span>
+          <span className="text-sm font-medium text-body">제목</span>
           <input
             value={form.title}
             onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))}
-            placeholder="What needs to happen?"
-            className="w-full rounded-2xl border border-line bg-white px-4 py-3 text-sm outline-none transition focus:border-accent"
+            placeholder="무엇을 해야 하나요?"
+            className="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none focus:border-accent"
           />
         </label>
 
         <label className="space-y-2">
-          <span className="text-sm font-medium text-ink">Assignee</span>
+          <span className="text-sm font-medium text-body">담당자</span>
           <select
             value={form.assigneeId}
             onChange={(event) => setForm((current) => ({ ...current, assigneeId: event.target.value }))}
-            className="w-full rounded-2xl border border-line bg-white px-4 py-3 text-sm outline-none transition focus:border-accent"
+            className="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none focus:border-accent"
           >
-            <option value="">Select assignee</option>
+            <option value="">담당자 선택</option>
             {assigneeOptions.map((assignee) => (
               <option key={assignee.id} value={assignee.id}>
-                {assignee.name} ({assignee.role})
+                {assignee.name} ({formatUserRole(assignee.role)})
               </option>
             ))}
           </select>
         </label>
 
         <label className="space-y-2">
-          <span className="text-sm font-medium text-ink">Due date</span>
+          <span className="text-sm font-medium text-body">마감일</span>
           <input
             type="date"
             value={form.dueDate}
             onChange={(event) => setForm((current) => ({ ...current, dueDate: event.target.value }))}
-            className="w-full rounded-2xl border border-line bg-white px-4 py-3 text-sm outline-none transition focus:border-accent"
+            className="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none focus:border-accent"
           />
         </label>
 
         <label className="space-y-2 lg:col-span-2">
-          <span className="text-sm font-medium text-ink">Description</span>
+          <span className="text-sm font-medium text-body">설명</span>
           <textarea
             value={form.description}
             onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))}
-            placeholder="Add just enough context for the team."
+            placeholder="팀원이 이해할 수 있을 만큼만 설명을 적어주세요."
             rows={4}
-            className="w-full rounded-2xl border border-line bg-white px-4 py-3 text-sm outline-none transition focus:border-accent"
+            className="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none focus:border-accent"
           />
         </label>
 
@@ -100,18 +101,18 @@ export function IssueForm({
           <button
             type="submit"
             disabled={isSaving}
-            className="rounded-2xl bg-ink px-4 py-3 text-sm font-semibold text-paper transition hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-full bg-accent px-4 py-3 text-sm font-semibold text-white hover:bg-brand disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isSaving ? "Saving..." : "Create issue"}
+            {isSaving ? "저장 중..." : "이슈 등록"}
           </button>
-          <p className="rounded-2xl bg-accentSoft px-4 py-3 text-xs leading-5 text-slate-600">
-            Assignees come from the active user list so issue ownership stays consistent.
+          <p className="rounded-xl bg-accentSoft px-4 py-3 text-xs leading-5 text-body">
+            활성 사용자 목록에서 담당자를 선택해 업무 소유자를 명확히 유지합니다.
           </p>
         </div>
       </form>
 
       {error ? (
-        <p className="mt-3 rounded-2xl bg-alertSoft px-4 py-3 text-sm text-alert">{error}</p>
+        <p className="mt-3 rounded-xl bg-alertSoft px-4 py-3 text-sm text-alert">{error}</p>
       ) : null}
     </section>
   );

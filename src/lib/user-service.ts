@@ -13,7 +13,7 @@ async function apiFetch<T>(path: string, options: RequestInit = {}) {
   });
 
   if (!response.ok) {
-    let message = "Request failed.";
+    let message = "요청에 실패했습니다.";
     try {
       const data = (await response.json()) as { message?: string };
       if (data.message) {

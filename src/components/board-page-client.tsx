@@ -63,7 +63,7 @@ export function BoardPageClient({
               setIssues((current) => [nextIssue, ...current]);
               refreshData();
             } catch (submitError) {
-              setError(submitError instanceof Error ? submitError.message : "Issue could not be created.");
+              setError(submitError instanceof Error ? submitError.message : "이슈를 등록하지 못했습니다.");
               throw submitError;
             } finally {
               setIsSaving(false);
@@ -71,7 +71,7 @@ export function BoardPageClient({
           }}
         />
 
-        {error ? <p className="rounded-2xl bg-alertSoft px-4 py-3 text-sm text-alert">{error}</p> : null}
+        {error ? <p className="rounded-xl bg-alertSoft px-4 py-3 text-sm text-alert">{error}</p> : null}
 
         <IssueBoard
           issues={issues}
@@ -88,7 +88,7 @@ export function BoardPageClient({
               setIssues((current) => current.map((issue) => (issue.id === id ? updatedIssue : issue)));
               refreshData();
             } catch (updateError) {
-              setError(updateError instanceof Error ? updateError.message : "Issue could not be updated.");
+              setError(updateError instanceof Error ? updateError.message : "이슈를 수정하지 못했습니다.");
               throw updateError;
             } finally {
               setIsUpdating(false);

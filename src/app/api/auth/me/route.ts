@@ -11,7 +11,7 @@ export async function GET() {
   const user = getUserFromSessionCookie(cookieValue);
 
   if (!user) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ message: "로그인이 필요합니다." }, { status: 401 });
   }
 
   return NextResponse.json({ user });

@@ -16,7 +16,7 @@ function getCurrentUser() {
 export async function GET(request: Request) {
   const user = getCurrentUser();
   if (!user) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ message: "로그인이 필요합니다." }, { status: 401 });
   }
   const requestUrl = new URL(request.url);
   const scope = requestUrl.searchParams.get("scope");
@@ -28,7 +28,7 @@ export async function GET(request: Request) {
   }
 
   if (user.role !== "lead") {
-    return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+    return NextResponse.json({ message: "접근 권한이 없습니다." }, { status: 403 });
   }
 
   return NextResponse.json({ users: listManagedUsers() });
@@ -37,10 +37,10 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const user = getCurrentUser();
   if (!user) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ message: "로그인이 필요합니다." }, { status: 401 });
   }
   if (user.role !== "lead") {
-    return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+    return NextResponse.json({ message: "접근 권한이 없습니다." }, { status: 403 });
   }
 
   try {
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
     const createdUser = createManagedUser(input);
     return NextResponse.json({ user: createdUser }, { status: 201 });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "User could not be created.";
+    const message = error instanceof Error ? error.message : "사용자를 생성하지 못했습니다.";
     return NextResponse.json({ message }, { status: 400 });
   }
 }

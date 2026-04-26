@@ -11,8 +11,8 @@ export default function BoardPage() {
 
   return (
     <AppShell
-      title="Execution board"
-      description="Register work quickly, move status with drag and drop, and keep the whole team in one lightweight board."
+      title="실행 보드"
+      description="업무를 빠르게 등록하고, 상태를 이동하며, 팀 전체 흐름을 한 보드에서 관리합니다."
     >
       <BoardPageClient initialIssues={issues} assigneeOptions={assigneeOptions} user={user} />
     </AppShell>

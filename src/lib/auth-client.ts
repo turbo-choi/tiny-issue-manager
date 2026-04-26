@@ -13,7 +13,7 @@ async function apiFetch<T>(path: string, options: RequestInit = {}) {
   });
 
   if (!response.ok) {
-    let message = "Request failed.";
+    let message = "요청에 실패했습니다.";
     try {
       const data = (await response.json()) as { message?: string };
       if (data.message) {
@@ -30,7 +30,7 @@ async function apiFetch<T>(path: string, options: RequestInit = {}) {
 
 export async function signIn({ email, password }: SignInInput) {
   if (!email.trim() || !password.trim()) {
-    throw new Error("Email and password are required.");
+    throw new Error("이메일과 비밀번호를 입력해주세요.");
   }
 
   const data = await apiFetch<{ user: SessionUser }>("/api/auth/login", {

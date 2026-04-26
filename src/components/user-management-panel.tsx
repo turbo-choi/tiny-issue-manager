@@ -4,6 +4,7 @@ import { startTransition, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { createUser as createUserRequest, updateUser as updateUserRequest } from "@/lib/user-service";
+import { formatUserRole } from "@/lib/i18n";
 import type { CreateUserInput, ManagedUser, UserRole } from "@/types/user";
 
 const ROLES: UserRole[] = ["lead", "member", "planner"];
@@ -26,11 +27,11 @@ function RoleSelect({
     <select
       value={value}
       onChange={(event) => onChange(event.target.value as UserRole)}
-      className="rounded-xl border border-line bg-white px-3 py-2 text-sm text-ink outline-none transition focus:border-accent"
+      className="rounded-xl border border-line bg-white px-3 py-2 text-sm text-body outline-none focus:border-accent"
     >
       {ROLES.map((role) => (
         <option key={role} value={role}>
-          {role}
+          {formatUserRole(role)}
         </option>
       ))}
     </select>
@@ -60,20 +61,20 @@ function UserRow({
   return (
     <tr className="border-t border-line">
       <td className="px-4 py-4">
-        <p className="font-medium text-ink">{user.name}</p>
-        <p className="text-sm text-slate-500">{user.email}</p>
+        <p className="font-medium text-body">{user.name}</p>
+        <p className="text-sm text-muted">{user.email}</p>
       </td>
       <td className="px-4 py-4">
         <RoleSelect value={role} onChange={setRole} />
       </td>
       <td className="px-4 py-4">
-        <label className="inline-flex items-center gap-2 text-sm text-slate-600">
+        <label className="inline-flex items-center gap-2 text-sm text-body">
           <input
             type="checkbox"
             checked={isActive}
             onChange={(event) => setIsActive(event.target.checked)}
           />
-          Active
+          활성
         </label>
       </td>
       <td className="px-4 py-4">
@@ -81,8 +82,8 @@ function UserRow({
           type="password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
-          placeholder="Optional reset password"
-          className="w-full min-w-[180px] rounded-xl border border-line bg-white px-3 py-2 text-sm outline-none transition focus:border-accent"
+          placeholder="비밀번호 재설정 선택"
+          className="w-full min-w-[180px] rounded-xl border border-line bg-white px-3 py-2 text-sm outline-none focus:border-accent"
         />
       </td>
       <td className="px-4 py-4">
@@ -104,14 +105,14 @@ function UserRow({
                 router.refresh();
               });
             } catch (submitError) {
-              setError(submitError instanceof Error ? submitError.message : "User could not be updated.");
+              setError(submitError instanceof Error ? submitError.message : "사용자를 수정하지 못했습니다.");
             } finally {
               setIsSaving(false);
             }
           }}
-          className="rounded-full border border-line px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-full border border-line px-4 py-2 text-sm font-semibold text-body hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isSaving ? "Saving..." : "Save"}
+          {isSaving ? "저장 중..." : "저장"}
         </button>
         {error ? <p className="mt-2 text-sm text-alert">{error}</p> : null}
       </td>
@@ -139,9 +140,9 @@ export function UserManagementPanel({
 
   return (
     <div className="space-y-5">
-      <section className="rounded-[28px] border border-line bg-paper p-5 shadow-card">
-        <p className="text-xs uppercase tracking-[0.28em] text-accent">Lead tools</p>
-        <h2 className="mt-2 text-xl font-semibold text-ink">Create user</h2>
+      <section className="rounded-xl border border-line bg-paper p-5 shadow-card">
+        <p className="text-xs uppercase tracking-[0.18em] text-accent">리드 도구</p>
+        <h2 className="mt-2 text-xl font-semibold text-brand">사용자 생성</h2>
         <form
           className="mt-5 grid gap-4 lg:grid-cols-4"
           onSubmit={async (event) => {
@@ -156,7 +157,7 @@ export function UserManagementPanel({
                 router.refresh();
               });
             } catch (submitError) {
-              setError(submitError instanceof Error ? submitError.message : "User could not be created.");
+              setError(submitError instanceof Error ? submitError.message : "사용자를 생성하지 못했습니다.");
             } finally {
               setIsCreating(false);
             }
@@ -165,53 +166,53 @@ export function UserManagementPanel({
           <input
             value={form.name}
             onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
-            placeholder="Name"
-            className="rounded-2xl border border-line bg-white px-4 py-3 text-sm outline-none transition focus:border-accent"
+            placeholder="이름"
+            className="rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none focus:border-accent"
           />
           <input
             type="email"
             value={form.email}
             onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
-            placeholder="Email"
-            className="rounded-2xl border border-line bg-white px-4 py-3 text-sm outline-none transition focus:border-accent"
+            placeholder="이메일"
+            className="rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none focus:border-accent"
           />
           <RoleSelect value={form.role} onChange={(role) => setForm((current) => ({ ...current, role }))} />
           <input
             type="password"
             value={form.password}
             onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
-            placeholder="Password"
-            className="rounded-2xl border border-line bg-white px-4 py-3 text-sm outline-none transition focus:border-accent"
+            placeholder="비밀번호"
+            className="rounded-xl border border-line bg-white px-4 py-3 text-sm outline-none focus:border-accent"
           />
           <div className="flex justify-end lg:col-span-4">
             <button
               type="submit"
               disabled={isCreating}
-              className="rounded-2xl bg-ink px-4 py-3 text-sm font-semibold text-paper transition hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-full bg-accent px-4 py-3 text-sm font-semibold text-white hover:bg-brand disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isCreating ? "Creating..." : "Create user"}
+              {isCreating ? "생성 중..." : "사용자 생성"}
             </button>
           </div>
         </form>
 
-        {error ? <p className="mt-4 rounded-2xl bg-alertSoft px-4 py-3 text-sm text-alert">{error}</p> : null}
+        {error ? <p className="mt-4 rounded-xl bg-alertSoft px-4 py-3 text-sm text-alert">{error}</p> : null}
       </section>
 
-      <section className="overflow-hidden rounded-[28px] border border-line bg-paper shadow-card">
+      <section className="overflow-hidden rounded-xl border border-line bg-paper shadow-card">
         <div className="border-b border-line px-5 py-4">
-          <p className="text-xs uppercase tracking-[0.28em] text-accent">User directory</p>
-          <h2 className="mt-2 text-xl font-semibold text-ink">Manage roles and access</h2>
+          <p className="text-xs uppercase tracking-[0.18em] text-accent">사용자 목록</p>
+          <h2 className="mt-2 text-xl font-semibold text-brand">역할과 접근 권한 관리</h2>
         </div>
 
         <div className="overflow-x-auto">
           <table className="min-w-full text-left">
-            <thead className="bg-sand text-xs uppercase tracking-[0.18em] text-slate-500">
+            <thead className="bg-sand text-xs uppercase tracking-[0.18em] text-muted">
               <tr>
-                <th className="px-4 py-3">User</th>
-                <th className="px-4 py-3">Role</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Reset password</th>
-                <th className="px-4 py-3">Action</th>
+                <th className="px-4 py-3">사용자</th>
+                <th className="px-4 py-3">역할</th>
+                <th className="px-4 py-3">상태</th>
+                <th className="px-4 py-3">비밀번호 재설정</th>
+                <th className="px-4 py-3">작업</th>
               </tr>
             </thead>
             <tbody>

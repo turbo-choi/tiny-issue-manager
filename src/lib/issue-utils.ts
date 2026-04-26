@@ -61,8 +61,8 @@ export function formatShortDate(value: string) {
     return "";
   }
 
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
+  return new Intl.DateTimeFormat("ko-KR", {
+    month: "numeric",
     day: "numeric",
     timeZone: "UTC",
   }).format(new Date(Date.UTC(parts.year, parts.month - 1, parts.day)));

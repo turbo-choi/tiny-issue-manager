@@ -88,7 +88,7 @@ function getBootstrapLeadConfig() {
 
   if (!email || !name || !password) {
     throw new Error(
-      "BOOTSTRAP_LEAD_EMAIL, BOOTSTRAP_LEAD_NAME, and BOOTSTRAP_LEAD_PASSWORD must all be set together.",
+      "BOOTSTRAP_LEAD_EMAIL, BOOTSTRAP_LEAD_NAME, BOOTSTRAP_LEAD_PASSWORD는 함께 설정해야 합니다.",
     );
   }
 
@@ -330,7 +330,7 @@ function seedUsers(db: Database.Database) {
   const lead = {
     id: "user-lead",
     email: "team.lead@example.com",
-    name: "Team Lead",
+    name: "팀 리드",
     role: "lead" as const,
     created_at: new Date().toISOString(),
     password_hash: leadPassword.hash,
@@ -339,7 +339,7 @@ function seedUsers(db: Database.Database) {
   const member = {
     id: "user-member",
     email: "team.member@example.com",
-    name: "Team Member",
+    name: "팀 멤버",
     role: "member" as const,
     created_at: new Date().toISOString(),
     password_hash: memberPassword.hash,
@@ -348,7 +348,7 @@ function seedUsers(db: Database.Database) {
   const planner = {
     id: "user-planner",
     email: "team.planner@example.com",
-    name: "Planner",
+    name: "플래너",
     role: "planner" as const,
     created_at: new Date().toISOString(),
     password_hash: plannerPassword.hash,
@@ -362,8 +362,8 @@ function seedUsers(db: Database.Database) {
 
     insertIssue.run({
       id: "issue-seed-1",
-      title: "Marketing copy sign-off",
-      description: "Planner is waiting for the final review before release.",
+      title: "마케팅 문구 최종 확인",
+      description: "릴리즈 전 최종 검토를 기다리고 있습니다.",
       creator_id: planner.id,
       creator_name: planner.name,
       assignee_id: lead.id,
@@ -376,8 +376,8 @@ function seedUsers(db: Database.Database) {
 
     insertIssue.run({
       id: "issue-seed-2",
-      title: "Release checklist review",
-      description: "Validate deployment notes and confirm rollback steps.",
+      title: "릴리즈 체크리스트 검토",
+      description: "배포 메모를 확인하고 롤백 절차를 점검합니다.",
       creator_id: lead.id,
       creator_name: lead.name,
       assignee_id: member.id,
@@ -390,8 +390,8 @@ function seedUsers(db: Database.Database) {
 
     insertIssue.run({
       id: "issue-seed-3",
-      title: "Hero section shipped",
-      description: "Completed issue kept for result confirmation.",
+      title: "히어로 섹션 배포 완료",
+      description: "결과 확인을 위해 완료 상태로 보관된 이슈입니다.",
       creator_id: planner.id,
       creator_name: planner.name,
       assignee_id: member.id,
@@ -459,11 +459,11 @@ export function createUser(input: { email: string; name: string; role: UserRole;
   const password = input.password.trim();
 
   if (!email || !name || !password) {
-    throw new Error("Name, email, role, and password are required.");
+    throw new Error("이름, 이메일, 역할, 비밀번호를 입력해주세요.");
   }
 
   if (getUserByEmail(email)) {
-    throw new Error("A user with this email already exists.");
+    throw new Error("이미 같은 이메일을 사용하는 사용자가 있습니다.");
   }
 
   const passwordRecord = createPasswordRecord(password);
@@ -476,7 +476,7 @@ export function createUser(input: { email: string; name: string; role: UserRole;
 
   const user = getUserById(userId);
   if (!user) {
-    throw new Error("User could not be created.");
+    throw new Error("사용자를 생성하지 못했습니다.");
   }
   return user;
 }
@@ -485,7 +485,7 @@ export function updateUser(input: { id: string; role?: UserRole; isActive?: bool
   const db = getDatabase();
   const current = db.prepare("SELECT * FROM users WHERE id = ? LIMIT 1").get(input.id) as UserRow | undefined;
   if (!current) {
-    throw new Error("User not found.");
+    throw new Error("사용자를 찾을 수 없습니다.");
   }
 
   const nextRole = input.role ?? current.role;
@@ -503,7 +503,7 @@ export function updateUser(input: { id: string; role?: UserRole; isActive?: bool
 
   const user = getUserById(input.id);
   if (!user) {
-    throw new Error("User could not be updated.");
+    throw new Error("사용자를 수정하지 못했습니다.");
   }
   return user;
 }
@@ -573,7 +573,7 @@ export function createIssue(input: {
 
   const row = db.prepare("SELECT * FROM issues WHERE id = ? LIMIT 1").get(issueId) as IssueRow | undefined;
   if (!row) {
-    throw new Error("Issue could not be created.");
+    throw new Error("이슈를 등록하지 못했습니다.");
   }
   return mapIssue(row);
 }
@@ -588,7 +588,7 @@ export function updateIssueStatus(id: string, status: IssueStatus) {
   db.prepare("UPDATE issues SET status = ?, updated_at = ? WHERE id = ?").run(status, new Date().toISOString(), id);
   const row = db.prepare("SELECT * FROM issues WHERE id = ? LIMIT 1").get(id) as IssueRow | undefined;
   if (!row) {
-    throw new Error("Issue not found.");
+    throw new Error("이슈를 찾을 수 없습니다.");
   }
   return mapIssue(row);
 }
@@ -603,7 +603,7 @@ export function updateIssue(
   const db = getDatabase();
   const current = db.prepare("SELECT * FROM issues WHERE id = ? LIMIT 1").get(id) as IssueRow | undefined;
   if (!current) {
-    throw new Error("Issue not found.");
+    throw new Error("이슈를 찾을 수 없습니다.");
   }
 
   const updates: string[] = [];
@@ -645,7 +645,7 @@ export function updateIssue(
 
   const row = db.prepare("SELECT * FROM issues WHERE id = ? LIMIT 1").get(id) as IssueRow | undefined;
   if (!row) {
-    throw new Error("Issue not found.");
+    throw new Error("이슈를 찾을 수 없습니다.");
   }
   return mapIssue(row);
 }
@@ -654,7 +654,7 @@ export function deleteIssue(id: string) {
   const db = getDatabase();
   const result = db.prepare("DELETE FROM issues WHERE id = ?").run(id);
   if (result.changes === 0) {
-    throw new Error("Issue not found.");
+    throw new Error("이슈를 찾을 수 없습니다.");
   }
 }
 

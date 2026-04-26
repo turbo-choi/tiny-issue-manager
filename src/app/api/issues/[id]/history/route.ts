@@ -29,7 +29,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
   const user = getUserFromSessionCookie(cookieValue);
 
   if (!user) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ message: "로그인이 필요합니다." }, { status: 401 });
   }
 
   try {
@@ -47,24 +47,24 @@ export async function GET(request: Request, { params }: { params: { id: string }
         : undefined;
 
     if (fieldParam && !field) {
-      return NextResponse.json({ message: "Invalid history field filter." }, { status: 400 });
+      return NextResponse.json({ message: "변경 이력 필터가 올바르지 않습니다." }, { status: 400 });
     }
 
     const lookbackDays =
       daysParam === "7" ? 7 : daysParam === "30" ? 30 : undefined;
     if (daysParam && !lookbackDays) {
-      return NextResponse.json({ message: "Invalid history period filter." }, { status: 400 });
+      return NextResponse.json({ message: "변경 이력 기간 필터가 올바르지 않습니다." }, { status: 400 });
     }
 
     const fromIsoRaw = fromParam ? parseDateToIso(fromParam, "start") : undefined;
     const toIsoRaw = toParam ? parseDateToIso(toParam, "end") : undefined;
     if ((fromParam && !fromIsoRaw) || (toParam && !toIsoRaw)) {
-      return NextResponse.json({ message: "Invalid custom date range filter." }, { status: 400 });
+      return NextResponse.json({ message: "직접 선택한 날짜 범위가 올바르지 않습니다." }, { status: 400 });
     }
     const fromIso = fromIsoRaw ?? undefined;
     const toIso = toIsoRaw ?? undefined;
     if (fromIso && toIso && new Date(fromIso).getTime() > new Date(toIso).getTime()) {
-      return NextResponse.json({ message: "`from` date must be before or equal to `to` date." }, { status: 400 });
+      return NextResponse.json({ message: "시작일은 종료일보다 늦을 수 없습니다." }, { status: 400 });
     }
 
     const page = pageParam ? Number.parseInt(pageParam, 10) : undefined;
@@ -81,7 +81,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
 
     return NextResponse.json({ history, pagination });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Issue history could not be loaded.";
-    return NextResponse.json({ message }, { status: message.includes("not found") ? 404 : 400 });
+    const message = error instanceof Error ? error.message : "변경 이력을 불러오지 못했습니다.";
+    return NextResponse.json({ message }, { status: message.includes("not found") || message.includes("찾을 수") ? 404 : 400 });
   }
 }
